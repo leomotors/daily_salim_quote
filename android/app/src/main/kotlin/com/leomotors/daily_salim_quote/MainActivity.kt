@@ -1,4 +1,4 @@
-package com.example.daily_salim_quote
+package com.leomotors.daily_salim_quote
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.daily_salim_quote">
+    package="com.leomotors.daily_salim_quote">
    <application
         android:label="daily_salim_quote"
         android:icon="@mipmap/ic_launcher">
@@ -38,4 +38,5 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+    <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>
