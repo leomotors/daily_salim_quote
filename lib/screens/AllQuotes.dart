@@ -24,7 +24,7 @@ class _AllQuotesPageState extends State<AllQuotesPage> {
         itemCount: widget.quality.length,
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
-            title: Text(widget.quality[index].body),
+            title: Text("#${index + 1} ${widget.quality[index].body}"),
           );
         },
       ),
