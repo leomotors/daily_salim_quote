@@ -44,6 +44,8 @@ class _MyHomePageState extends State<MyHomePage> {
   final _salimRepoSauce = "https://github.com/narze/awesome-salim-quotes";
   final _stupidWhistleLocation =
       "assets/images/the_whistle_that_make_our_country_catastrophic_till_today.jpg";
+  final _heaven = "https://www.youtube.com/watch?v=j8PxqgliIno";
+
   List<Quote> quotes = [];
   String currentQuote = "";
   String appVersion = "";
@@ -85,6 +87,8 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           IconButton(
             onPressed: () {
+              if(random.nextInt(100)<3)
+                launch(_heaven);
               setState(() {
                 randomText();
               });
