@@ -5,9 +5,14 @@ import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart';
 
 void main() {
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -88,29 +93,47 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: FutureBuilder(
-        future: getSalimQuote(),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return Center(
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    "$currentQuote",
-                    style: TextStyle(
-                      fontSize: 20,
+      body: Column(
+        children: [
+          FutureBuilder(
+            future: getSalimQuote(),
+            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return Center(
+                  child: Container(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        "$currentQuote",
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                    textAlign: TextAlign.center,
+                    decoration: BoxDecoration(color: Colors.blue[100]),
                   ),
+                );
+              } else {
+                return LinearProgressIndicator();
+              }
+            },
+          ),
+          SizedBox(height: 30),
+          ElevatedButton.icon(
+            onPressed: () {
+              Clipboard.setData(ClipboardData(text: currentQuote));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("ก็อฟฟี่成功!!!"),
                 ),
-                decoration: BoxDecoration(color: Colors.blue[100]),
-              ),
-            );
-          } else {
-            return LinearProgressIndicator();
-          }
-        },
+              );
+            },
+            icon: Icon(Icons.copy),
+            label: Text("ก็อฟฟฟ"),
+          ),
+        ],
+        mainAxisAlignment: MainAxisAlignment.center,
       ),
       drawer: Drawer(
         child: ListView(
