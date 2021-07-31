@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.leomotors.daily_salim_quote">
    <application
-        android:label="daily_salim_quote"
+        android:label="Daily Salim Quote"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

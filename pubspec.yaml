@@ -29,9 +29,17 @@ dependencies:
   http: ^0.13.3
   package_info: ^2.0.2
 
+  flutter_launcher_icons: ^0.9.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/images/the_whistle_that_make_our_country_catastrophic_till_today.jpg"
 
 flutter:
 
@@ -46,3 +54,6 @@ flutter:
           weight: 400
         - asset: assets/fonts/Anakotmai-Bold.ttf
           weight: 700
+
+  assets:
+    - assets/images/
