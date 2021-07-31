@@ -1,7 +1,9 @@
+import 'package:daily_salim_quote/screens/AllQuotes.dart';
 import 'package:daily_salim_quote/utils/SalimQuoteJSON.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:http/http.dart' as http;
+import 'package:package_info/package_info.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,13 +13,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Daily Salim Quote',
       theme: ThemeData(
         primarySwatch: Colors.yellow,
         fontFamily: "Anakotmai",
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-      
+      home: MyHomePage(title: 'Daily Salim Quote'),
     );
   }
 }
@@ -36,11 +37,13 @@ class _MyHomePageState extends State<MyHomePage> {
   final _salimAPIUrl = "https://watasalim.vercel.app/api/quotes";
   List<Quote> quotes = [];
   String currentQuote = "";
+  String appVersion = "";
 
   @override
   void initState() {
     super.initState();
     getSalimQuote();
+    getPkgVersion();
   }
 
   Future<void> getSalimQuote() async {
@@ -48,6 +51,12 @@ class _MyHomePageState extends State<MyHomePage> {
     Uri _salimUri = Uri.parse(_salimAPIUrl);
     var response = await http.read(_salimUri);
     quotes = salimQuoteFromJson(response).quotes;
+    randomText();
+  }
+
+  Future<void> getPkgVersion() async {
+    PackageInfo pkgInfo = await PackageInfo.fromPlatform();
+    appVersion = pkgInfo.version;
   }
 
   void randomText() {
@@ -58,7 +67,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Daily Salim Quote"),
+        title: Text(
+          "Daily Salim Quote",
+          style: TextStyle(
+            fontSize: 18,
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -95,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text(
                 "เมนูของพวกชังชาติ",
                 style: TextStyle(
-                  fontSize: 30,
+                  fontSize: 36,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -103,6 +117,40 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.red,
               ),
             ),
+            ListTile(
+                leading: Icon(Icons.all_inbox),
+                title: Text("Show all Quotes"),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) {
+                        return AllQuotesPage(quality: quotes);
+                      },
+                    ),
+                  );
+                }),
+            ListTile(
+                leading: Icon(Icons.info),
+                title: Text("About App"),
+                onTap: () {
+                  showAboutDialog(
+                    context: context,
+                    applicationVersion: "เวอร์ชั่น " + appVersion,
+                    children: [
+                      SizedBox(height: 10),
+                      Text(
+                        "Made possible with",
+                        textAlign: TextAlign.center,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FlutterLogo(
+                            style: FlutterLogoStyle.horizontal, size: 50),
+                      ),
+                    ],
+                  );
+                })
           ],
         ),
       ),
