@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:package_info/package_info.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(MyApp());
@@ -35,6 +36,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final random = Random();
   final _salimAPIUrl = "https://watasalim.vercel.app/api/quotes";
+  final _salimRepoSauce = "https://github.com/narze/awesome-salim-quotes";
+  final _stupidWhistleLocation =
+      "assets/images/the_whistle_that_make_our_country_catastrophic_till_today.jpg";
   List<Quote> quotes = [];
   String currentQuote = "";
   String appVersion = "";
@@ -89,12 +93,18 @@ class _MyHomePageState extends State<MyHomePage> {
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return Center(
-              child: Text(
-                "$currentQuote",
-                style: TextStyle(
-                  fontSize: 20,
+              child: Container(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    "$currentQuote",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-                textAlign: TextAlign.center,
+                decoration: BoxDecoration(color: Colors.blue[100]),
               ),
             );
           } else {
@@ -137,7 +147,20 @@ class _MyHomePageState extends State<MyHomePage> {
                   showAboutDialog(
                     context: context,
                     applicationVersion: "เวอร์ชั่น " + appVersion,
+                    applicationIcon:
+                        Image.asset(_stupidWhistleLocation, height: 80),
                     children: [
+                      InkWell(
+                          child: Text(
+                            "Quote's Sauce",
+                            style: TextStyle(
+                              color: Colors.blue,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          onTap: () {
+                            launch(_salimRepoSauce);
+                          }),
                       SizedBox(height: 10),
                       Text(
                         "Made possible with",
