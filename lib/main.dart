@@ -49,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Quote> quotes = [];
   String currentQuote = "กำลังโหลด รอแป๊ปนึง น ะ จ๊ ะ";
-  int currentQuoteID = 0;
+  int currentQuoteID = -1;
   String appVersion = "";
 
   @override
@@ -119,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           Text(
-            "Quote #$currentQuoteID",
+            "Quote #${currentQuoteID + 1}",
             style: TextStyle(
               fontSize: 18,
             ),
