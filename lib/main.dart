@@ -45,9 +45,11 @@ class _MyHomePageState extends State<MyHomePage> {
   final _stupidWhistleLocation =
       "assets/images/the_whistle_that_make_our_country_catastrophic_till_today.jpg";
   final _heaven = "https://www.youtube.com/watch?v=j8PxqgliIno";
+  final _chanceToHeaven = 3;
 
   List<Quote> quotes = [];
-  String currentQuote = "";
+  String currentQuote = "กำลังโหลด รอแป๊ปนึง น ะ จ๊ ะ";
+  int currentQuoteID = 0;
   String appVersion = "";
 
   @override
@@ -62,7 +64,9 @@ class _MyHomePageState extends State<MyHomePage> {
     Uri _salimUri = Uri.parse(_salimAPIUrl);
     var response = await http.read(_salimUri);
     quotes = salimQuoteFromJson(response).quotes;
-    randomText();
+    setState(() {
+      randomText();
+    });
   }
 
   Future<void> getPkgVersion() async {
@@ -71,7 +75,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void randomText() {
-    currentQuote = quotes[random.nextInt(quotes.length)].body;
+    currentQuoteID = random.nextInt(quotes.length);
+    currentQuote = quotes[currentQuoteID].body;
   }
 
   @override
@@ -87,8 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           IconButton(
             onPressed: () {
-              if(random.nextInt(100)<3)
-                launch(_heaven);
+              if (random.nextInt(100) < _chanceToHeaven) launch(_heaven);
               setState(() {
                 randomText();
               });
@@ -99,31 +103,27 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Column(
         children: [
-          FutureBuilder(
-            future: getSalimQuote(),
-            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return Center(
-                  child: Container(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        "$currentQuote",
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    decoration: BoxDecoration(color: Colors.blue[100]),
+          Center(
+            child: Container(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  "$currentQuote",
+                  style: TextStyle(
+                    fontSize: 20,
                   ),
-                );
-              } else {
-                return Container();
-              }
-            },
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              decoration: BoxDecoration(color: Colors.blue[100]),
+            ),
           ),
-          SizedBox(height: 30),
+          Text(
+            "Quote #$currentQuoteID",
+            style: TextStyle(
+              fontSize: 18,
+            ),
+          ),
           ElevatedButton.icon(
             onPressed: () {
               Clipboard.setData(ClipboardData(text: currentQuote));
