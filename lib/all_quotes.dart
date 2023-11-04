@@ -1,26 +1,27 @@
-import 'package:daily_salim_quote/utils/SalimQuoteJSON.dart';
-import 'package:flutter/material.dart';
+// 🐦 Flutter imports:
+import "package:flutter/material.dart";
+
+// 🌎 Project imports:
+import "package:daily_salim_quote/model.dart";
 
 class AllQuotesPage extends StatefulWidget {
-  const AllQuotesPage({Key? key, required List<Quote> this.quality})
-      : super(key: key);
+  const AllQuotesPage({super.key, required this.quality});
 
-  final quality;
+  final List<Quote> quality;
 
   @override
-  _AllQuotesPageState createState() => _AllQuotesPageState();
+  State<AllQuotesPage> createState() => _AllQuotesPageState();
 }
 
 class _AllQuotesPageState extends State<AllQuotesPage> {
   @override
   Widget build(BuildContext context) {
-    print(widget.quality.length);
     return Scaffold(
       appBar: AppBar(
-        title: Text("All Quotes"),
+        title: const Text("All Quotes"),
       ),
       body: ListView.builder(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         itemCount: widget.quality.length,
         itemBuilder: (BuildContext context, int index) {
           return ListTile(

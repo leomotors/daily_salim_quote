@@ -1,41 +1,51 @@
-import 'package:daily_salim_quote/screens/AllQuotes.dart';
-import 'package:daily_salim_quote/utils/SalimQuoteJSON.dart';
-import 'package:flutter/material.dart';
-import 'dart:math';
-import 'package:http/http.dart' as http;
-import 'package:package_info/package_info.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter/services.dart';
+// 🎯 Dart imports:
+import "dart:convert";
+import "dart:math";
+
+// 🐦 Flutter imports:
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+
+// 📦 Package imports:
+import "package:http/http.dart" as http;
+import "package:package_info/package_info.dart";
+import "package:url_launcher/url_launcher.dart";
+
+// 🌎 Project imports:
+import "package:daily_salim_quote/all_quotes.dart";
+import "package:daily_salim_quote/model.dart";
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
-    runApp(MyApp());
+    runApp(const MyApp());
   });
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Daily Salim Quote',
+      title: "Daily Salim Quote",
       theme: ThemeData(
         primarySwatch: Colors.yellow,
         fontFamily: "Anakotmai",
       ),
-      home: MyHomePage(title: 'Daily Salim Quote'),
+      home: const MyHomePage(title: "Daily Salim Quote"),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({super.key, required this.title});
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -60,10 +70,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> getSalimQuote() async {
-    if (quotes.length > 0) return;
-    Uri _salimUri = Uri.parse(_salimAPIUrl);
-    var response = await http.read(_salimUri);
-    quotes = salimQuoteFromJson(response).quotes;
+    if (quotes.isNotEmpty) return;
+    Uri salimUri = Uri.parse(_salimAPIUrl);
+    var response = await http.get(salimUri);
+    quotes = salimQuoteFromJson(utf8.decode(response.bodyBytes)).quotes;
     setState(() {
       randomText();
     });
@@ -83,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Daily Salim Quote",
           style: TextStyle(
             fontSize: 18,
@@ -92,35 +102,38 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           IconButton(
             onPressed: () {
-              if (random.nextInt(100) < _chanceToHeaven) launch(_heaven);
+              if (random.nextInt(100) < _chanceToHeaven) {
+                launchUrl(Uri.parse(_heaven));
+              }
               setState(() {
                 randomText();
               });
             },
-            icon: Icon(Icons.replay),
+            icon: const Icon(Icons.replay),
           ),
         ],
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Center(
             child: Container(
+              decoration: BoxDecoration(color: Colors.blue[100]),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  "$currentQuote",
-                  style: TextStyle(
+                  currentQuote,
+                  style: const TextStyle(
                     fontSize: 20,
                   ),
                   textAlign: TextAlign.center,
                 ),
               ),
-              decoration: BoxDecoration(color: Colors.blue[100]),
             ),
           ),
           Text(
             "Quote #${currentQuoteID + 1}",
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 18,
             ),
           ),
@@ -128,21 +141,23 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () {
               Clipboard.setData(ClipboardData(text: currentQuote));
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
+                const SnackBar(
                   content: Text("ก็อฟฟี่成功!!!"),
                 ),
               );
             },
-            icon: Icon(Icons.copy),
-            label: Text("ก็อฟฟฟ"),
+            icon: const Icon(Icons.copy),
+            label: const Text("ก็อฟฟฟ"),
           ),
         ],
-        mainAxisAlignment: MainAxisAlignment.center,
       ),
       drawer: Drawer(
         child: ListView(
           children: [
-            DrawerHeader(
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.red,
+              ),
               child: Text(
                 "เมนูของพวกชังชาติ",
                 style: TextStyle(
@@ -150,57 +165,59 @@ class _MyHomePageState extends State<MyHomePage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              decoration: BoxDecoration(
-                color: Colors.red,
-              ),
             ),
             ListTile(
-                leading: Icon(Icons.all_inbox),
-                title: Text("Show all Quotes"),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) {
-                        return AllQuotesPage(quality: quotes);
-                      },
-                    ),
-                  );
-                }),
+              leading: const Icon(Icons.all_inbox),
+              title: const Text("Show all Quotes"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) {
+                      return AllQuotesPage(quality: quotes);
+                    },
+                  ),
+                );
+              },
+            ),
             ListTile(
-                leading: Icon(Icons.info),
-                title: Text("About App"),
-                onTap: () {
-                  showAboutDialog(
-                    context: context,
-                    applicationVersion: "เวอร์ชั่น " + appVersion,
-                    applicationIcon:
-                        Image.asset(_stupidWhistleLocation, height: 80),
-                    children: [
-                      InkWell(
-                          child: Text(
-                            "Quote's Sauce",
-                            style: TextStyle(
-                              color: Colors.blue,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          onTap: () {
-                            launch(_salimRepoSauce);
-                          }),
-                      SizedBox(height: 10),
-                      Text(
-                        "Made possible with",
+              leading: const Icon(Icons.info),
+              title: const Text("About App"),
+              onTap: () {
+                showAboutDialog(
+                  context: context,
+                  applicationVersion: "เวอร์ชั่น $appVersion",
+                  applicationIcon:
+                      Image.asset(_stupidWhistleLocation, height: 80),
+                  children: [
+                    InkWell(
+                      child: const Text(
+                        "Quote's Sauce",
+                        style: TextStyle(
+                          color: Colors.blue,
+                        ),
                         textAlign: TextAlign.center,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: FlutterLogo(
-                            style: FlutterLogoStyle.horizontal, size: 50),
+                      onTap: () {
+                        launchUrl(Uri.parse(_salimRepoSauce));
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      "Made possible with",
+                      textAlign: TextAlign.center,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: FlutterLogo(
+                        style: FlutterLogoStyle.horizontal,
+                        size: 50,
                       ),
-                    ],
-                  );
-                })
+                    ),
+                  ],
+                );
+              },
+            ),
           ],
         ),
       ),
