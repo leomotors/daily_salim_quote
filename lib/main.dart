@@ -142,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Clipboard.setData(ClipboardData(text: currentQuote));
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text("ก็อฟฟี่成功!!!"),
+                  content: Text("คัดลอกสำเร็จ!!!"),
                 ),
               );
             },
@@ -156,19 +156,19 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             const DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.red,
+                color: Color(0xffff7f00),
               ),
               child: Text(
                 "เมนูของพวกชังชาติ",
                 style: TextStyle(
-                  fontSize: 36,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
             ListTile(
               leading: const Icon(Icons.all_inbox),
-              title: const Text("Show all Quotes"),
+              title: const Text("แสดงคำพูดทั้งหมด"),
               onTap: () {
                 Navigator.push(
                   context,
@@ -182,7 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             ListTile(
               leading: const Icon(Icons.info),
-              title: const Text("About App"),
+              title: const Text("เกี่ยวกับแอป"),
               onTap: () {
                 showAboutDialog(
                   context: context,
@@ -192,7 +192,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     InkWell(
                       child: const Text(
-                        "Quote's Sauce",
+                        "ที่มา (Sauce) ของคำพูด",
                         style: TextStyle(
                           color: Colors.blue,
                         ),
@@ -204,7 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     const SizedBox(height: 10),
                     const Text(
-                      "Made possible with",
+                      "แอปนี้สร้างโดย",
                       textAlign: TextAlign.center,
                     ),
                     const Padding(
